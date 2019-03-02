@@ -2,14 +2,10 @@ package main
 
 import (
   "encoding/json"
-  "flag"
   "fmt"
-  "io/ioutil"
   "net/http"
   "os"
 )
-
-var filename = flag.String("config", "/app_metadata.json", "Location of the metadata file.")
 
 // Structs
 
@@ -23,7 +19,6 @@ type applicationData struct {
   LastCommitSHA string `json:"lastcommitsha"`
 }
 
-
 // Page handlers
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {
@@ -31,17 +26,11 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func healthcheckHandler(w http.ResponseWriter, r *http.Request) {
-  flag.Parse()
-  jsonFile, err := os.Open(*filename)
-  if err != nil {
-  	panic(err)
+  var appData = applicationData {
+    Version: os.Getenv("BUILD_VERSION"),
+    Description: "pre-interview technical test",
+    LastCommitSHA: os.Getenv("COMMIT_SHA"),
   }
-  defer jsonFile.Close()
-  metadata, err := ioutil.ReadAll(jsonFile)
-
-  var appData applicationData
-
-  json.Unmarshal(metadata, &appData)
 
   var healthcheckResponse = healthcheckResponse {
     []applicationData { appData },
@@ -56,11 +45,9 @@ func healthcheckHandler(w http.ResponseWriter, r *http.Request) {
   w.Write(response)
 }
 
-
 // Main
 
 func main() {
-
   http.HandleFunc("/", indexHandler)
   http.HandleFunc("/healthcheck/", healthcheckHandler)
   http.ListenAndServe(":8000", nil)
