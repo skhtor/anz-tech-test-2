@@ -5,6 +5,9 @@ services:
     entrypoint: /bin/bash
     build:
       context: .
+      args:
+        BUILD_VERSION: "1.0"
+        COMMIT_SHA: "abc123456"
   tests:
     image: appleboy/golang-testing
     working_dir: /app/

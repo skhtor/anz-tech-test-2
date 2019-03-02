@@ -6,11 +6,14 @@ FROM golang:alpine AS builder
 RUN apk update && apk add --no-cache git
 RUN adduser -S scratchuser
 
-WORKDIR $GOPATH/src/mypackage/myapp/
+WORKDIR /go/src/mypackage/myapp/
 COPY . .
 
-# Fetch dependencies
-RUN go get -d -v && \
+ARG BUILD_VERSION
+ARG COMMIT_SHA
+
+RUN ./inject_metadata.sh && \
+    go get -d -v && \
     CGO_ENABLED=0 go build -o /go/bin/hello && \
     chmod +x /go/bin/hello
 
@@ -24,4 +27,5 @@ COPY --from=0 /etc/passwd /etc/passwd
 USER scratchuser
 
 COPY --from=builder /go/bin/hello /go/bin/hello
-ENTRYPOINT ["/go/bin/hello"]
+COPY --from=builder /go/src/mypackage/myapp/app-metadata.json /app-metadata.json
+ENTRYPOINT ["/go/bin/hello -config=/app-metadata.json"]

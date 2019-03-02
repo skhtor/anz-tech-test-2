@@ -1,8 +1,15 @@
 package main
 
-import ("encoding/json"
-        "fmt"
-        "net/http")
+import (
+  "encoding/json"
+  "flag"
+  "fmt"
+  "io/ioutil"
+  "net/http"
+  "os"
+)
+
+var filename = flag.String("config", "app-metadata.json", "Location of the metadata file.")
 
 // Structs
 
@@ -19,18 +26,25 @@ type applicationData struct {
 
 // Page handlers
 
-func indexHandler(w http.ResponseWriter, r *http.Request)  {
+func indexHandler(w http.ResponseWriter, r *http.Request) {
   fmt.Fprintf(w, "Hello, world!")
 }
 
-func healthcheckHandler(w http.ResponseWriter, r *http.Request)  {
+func healthcheckHandler(w http.ResponseWriter, r *http.Request) {
+  flag.Parse()
+  jsonFile, err := os.Open(*filename)
+  if err != nil {
+  	panic(err)
+  }
+  defer jsonFile.Close()
+  metadata, err := ioutil.ReadAll(jsonFile)
+
+  var appData applicationData
+
+  json.Unmarshal(metadata, &appData)
 
   var healthcheckResponse = healthcheckResponse {
-    []applicationData { applicationData {
-      Version: "1.0",
-      Description: "pre-interview technical test",
-      LastCommitSHA: "abc123",
-    }},
+    []applicationData { appData },
   }
 
   response, err := json.Marshal(healthcheckResponse)
@@ -45,7 +59,8 @@ func healthcheckHandler(w http.ResponseWriter, r *http.Request)  {
 
 // Main
 
-func main()  {
+func main() {
+
   http.HandleFunc("/", indexHandler)
   http.HandleFunc("/healthcheck/", healthcheckHandler)
   http.ListenAndServe(":8000", nil)
