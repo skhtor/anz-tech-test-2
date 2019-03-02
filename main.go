@@ -4,15 +4,20 @@ import ("encoding/json"
         "fmt"
         "net/http")
 
-type HealthcheckResponse struct {
-  MyApplication []ApplicationData `json:"myapplication"`
+// Structs
+
+type healthcheckResponse struct {
+  MyApplication []applicationData `json:"myapplication"`
 }
 
-type ApplicationData struct {
+type applicationData struct {
   Version       string `json:"version"`
   Description   string `json:"description"`
   LastCommitSHA string `json:"lastcommitsha"`
 }
+
+
+// Page handlers
 
 func indexHandler(w http.ResponseWriter, r *http.Request)  {
   fmt.Fprintf(w, "Hello, world!")
@@ -20,8 +25,8 @@ func indexHandler(w http.ResponseWriter, r *http.Request)  {
 
 func healthcheckHandler(w http.ResponseWriter, r *http.Request)  {
 
-  var healthcheckResponse = HealthcheckResponse {
-    []ApplicationData { ApplicationData {
+  var healthcheckResponse = healthcheckResponse {
+    []applicationData { applicationData {
       Version: "1.0",
       Description: "pre-interview technical test",
       LastCommitSHA: "abc123",
@@ -36,6 +41,9 @@ func healthcheckHandler(w http.ResponseWriter, r *http.Request)  {
   w.Header().Set("Content-Type", "application/json")
   w.Write(response)
 }
+
+
+// Main
 
 func main()  {
   http.HandleFunc("/", indexHandler)

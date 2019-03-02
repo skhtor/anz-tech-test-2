@@ -1,0 +1,13 @@
+version: '3'
+services:
+  go-anz:
+    image: "go-anz:latest"
+    entrypoint: /bin/bash
+    build:
+      context: .
+  tests:
+    image: appleboy/golang-testing
+    working_dir: /app/
+    command: ./run_tests.sh
+    volumes:
+    - .:/app/
