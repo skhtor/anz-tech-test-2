@@ -29,6 +29,7 @@ ENV BUILD_VERSION=${BUILD_VERSION}
 ENV COMMIT_SHA=${COMMIT_SHA}
 
 EXPOSE 8000
+
 COPY --from=builder /etc/passwd /etc/passwd
 COPY --from=builder /etc/group /etc/group
 
