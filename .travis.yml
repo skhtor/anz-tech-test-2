@@ -3,11 +3,9 @@ services:
 
 jobs:
   include:
-    - stage: linting and unit test
+    - stage: linting, unit and functional test
       script:
         - docker-compose run tests
-    - stage: functional test
-      -script:
         - export COMMIT_SHA=$(git rev-parse HEAD)
         - export BUILD_VERSION=${TRAVIS_BUILD_NUMBER}
         - docker-compose build go-anz
