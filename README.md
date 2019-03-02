@@ -36,7 +36,12 @@ Run linting and unit tests using the following command:
 ### CI
 
 This app uses Travis CI as its CI engine.
-Please see the `.travis.yml` file for build steps
+Please see the `.travis.yml` file for build steps:
+- linting
+- unit tests which test that the function that handles the healthcheck endpoint returns the correct response format
+- functional tests which hit the endpoint and check that it returns the correct commit hash
+
+I did not include pushing the build artifact (docker image) to a registry in this CI
 
 ### Notes
 
