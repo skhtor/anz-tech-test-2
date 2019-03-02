@@ -9,5 +9,6 @@ jobs:
         - export COMMIT_SHA=$(git rev-parse HEAD)
         - export BUILD_VERSION=${TRAVIS_BUILD_NUMBER}
         - docker-compose build go-anz
+        - docker run -d -p 8000:8000 go-anz
         - sleep 5
         - curl 127.0.0.1:8000/healthcheck/ | grep $(git rev-parse HEAD)
