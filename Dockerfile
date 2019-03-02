@@ -4,6 +4,7 @@
 FROM golang:alpine AS builder
 
 RUN apk update && apk add --no-cache git
+RUN adduser -S scratchuser
 
 WORKDIR $GOPATH/src/mypackage/myapp/
 COPY . .
@@ -19,5 +20,8 @@ RUN go get -d -v && \
 FROM scratch
 
 EXPOSE 8000
+COPY --from=0 /etc/passwd /etc/passwd
+USER scratchuser
+
 COPY --from=builder /go/bin/hello /go/bin/hello
 ENTRYPOINT ["/go/bin/hello"]
