@@ -5,7 +5,7 @@ jobs:
   include:
     - stage: linting and unit test
       script:
-        - docker-compose run tests --build-arg
+        - docker-compose run tests
     - stage: functional test
       -script:
         - export COMMIT_SHA=$(git rev-parse HEAD)
