@@ -14,13 +14,13 @@ type ApplicationData struct {
   LastCommitSHA string `json:"lastcommitsha"`
 }
 
-func index_handler(w http.ResponseWriter, r *http.Request)  {
+func indexHandler(w http.ResponseWriter, r *http.Request)  {
   fmt.Fprintf(w, "Hello, world!")
 }
 
-func healthcheck_handler(w http.ResponseWriter, r *http.Request)  {
+func healthcheckHandler(w http.ResponseWriter, r *http.Request)  {
 
-  var healthcheck_response = HealthcheckResponse {
+  var healthcheckResponse = HealthcheckResponse {
     []ApplicationData { ApplicationData {
       Version: "1.0",
       Description: "pre-interview technical test",
@@ -28,7 +28,7 @@ func healthcheck_handler(w http.ResponseWriter, r *http.Request)  {
     }},
   }
 
-  response, err := json.Marshal(healthcheck_response)
+  response, err := json.Marshal(healthcheckResponse)
   if err != nil {
     panic(err)
   }
@@ -38,7 +38,7 @@ func healthcheck_handler(w http.ResponseWriter, r *http.Request)  {
 }
 
 func main()  {
-  http.HandleFunc("/", index_handler)
-  http.HandleFunc("/healthcheck/", healthcheck_handler)
+  http.HandleFunc("/", indexHandler)
+  http.HandleFunc("/healthcheck/", healthcheckHandler)
   http.ListenAndServe(":8000", nil)
 }
