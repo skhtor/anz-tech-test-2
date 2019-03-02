@@ -9,7 +9,7 @@ import (
   "os"
 )
 
-var filename = flag.String("config", "app-metadata.json", "Location of the metadata file.")
+var filename = flag.String("config", "/app_metadata.json", "Location of the metadata file.")
 
 // Structs
 
